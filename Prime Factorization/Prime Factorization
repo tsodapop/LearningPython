@@ -33,9 +33,9 @@ def main():
 					prime_factors.append(i)
 					number_prime //= i		
 					break
-				else:
-					prime_factors.append(number_prime)
-					return(prime_factors)
+			else:
+				prime_factors.append(number_prime)
+				return(prime_factors)
 
 if __name__ == '__main__':
 	print('your prime factorization results in {}'.format(main()))
