@@ -36,6 +36,12 @@ def get_data_from_yahoo(reload_sp500=False):
 	start = dt.datetime(2018,1,1)
 	end = dt.datetime(2018,12,31)
 
-	for ticker in tickers:
-		
+	for ticker in tickers[:10]: #first 10 tickers of S&P500
+		print(ticker)
+		if not os.path.exists('stock_dfs/{}.csv'.format(ticker)):
+			df = data.DataReader(ticker, 'morningstar', start, end)
+			df.to_csv('stock_dfs/{}.csv'.format(ticker))
+		else:
+			print('Already have {}'.format(ticker))
 
+get_data_from_yahoo()
