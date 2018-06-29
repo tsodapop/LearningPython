@@ -14,4 +14,14 @@ def process_data_for_labels(ticker):
 	df.fillna(0, inplace=True)
 	return tickers, df
 
-process_data_for_labels('AMD')	
+def buy_sell_hold(*args):
+	cols = [c for c in args]
+	requirement = 0.02
+	for col in cols:
+		if col > requirement:
+			return 1 #buy
+		if col < -requirement:
+			return -1 #sell
+		return 0 #hold
+
+# process_data_for_labels('AMD')	
