@@ -1,6 +1,7 @@
 import numpy as numpy
 import pandas as pd
 import pickle
+from collections import Counter
 
 def process_data_for_labels(ticker):
 	hm_days = 5
@@ -24,4 +25,31 @@ def buy_sell_hold(*args):
 			return -1 #sell
 		return 0 #hold
 
+def extract_featuresets(ticker):
+	tickers, df = process_data_for_labels(ticker)
+
+	df['{}_target'.format(ticker)] = list(map(buy_sell_hold, 
+									df['{}_1d'.format(ticker)],
+									df['{}_2d'.format(ticker)],
+									df['{}_3d'.format(ticker)]
+									)) 
+	vals = df['{}_target'.format(ticker)].values.tolist()
+	str_vals = [str(i) for i in vals]
+	print('Data Spread:', Counter(str_vals))
+
+	df.fillna(0, inplace=True)
+	df = df.replace([numpy.inf, -numpy.inf], numpy.nan)
+	df.dropna(inplace=True)
+
+	df_vals = df[[ticker for ticker in tickers]].pct_change()
+	df_vals = df_vals.replace([numpy.inf, -numpy.inf], 0)
+	df_vals.fillna(0, inplace=True)
+
+	X = df_vals.values
+	y = df['{}_target'.format(ticker)].values
+
+	return X, y, df
+
+
 # process_data_for_labels('AMD')	
+extract_featuresets('AMD')
